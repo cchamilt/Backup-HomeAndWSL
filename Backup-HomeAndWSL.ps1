@@ -42,10 +42,9 @@
     To run the script as a scheduled task:
     $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$PWD\Backup-HomeAndWSL.ps1`""
     $Trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Sunday -At 2am
-    $Principal = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" -LogonType Password -RunLevel Highest
     $Settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 
-    Register-ScheduledTask -TaskName "Weekly PC Backup" -Action $Action -Trigger $Trigger -Principal $Principal -Settings $Settings -Description "Weekly backup of home directory and WSL distributions"
+    Register-ScheduledTask -TaskName "Weekly PC Backup" -Action $Action -Trigger $Trigger -Settings $Settings -Description "Weekly backup of home directory and WSL distributions" -User "$env:USERDOMAIN\$env:USERNAME" -Password (Read-Host -Prompt "Enter password for scheduled task" -AsSecureString)
 
 Copyright (c) 2024, Chris Hamilton
 All rights reserved.
