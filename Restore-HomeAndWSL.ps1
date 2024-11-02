@@ -145,7 +145,7 @@ function Send-ToastNotification {
     }
 
     try {
-        powershell {
+        powershell -Command {
 
         # Toast notification template
         $template = @"
@@ -216,7 +216,7 @@ function Send-ErrorNotification {
 
     # Send toast notification
     if ($configBackup.Notifications.Toast.Enable) {
-        Send-ToastNotification -Title "Backup Warning - $computerName" -Message "Backup completed with $($ErrorMessages.Count) warnings/errors"
+        Send-ToastNotification -Title "Restore-HomeAndWSL Error - $computerName" -Message "Restore completed with $($ErrorMessages.Count) errors"
     }
 }
 

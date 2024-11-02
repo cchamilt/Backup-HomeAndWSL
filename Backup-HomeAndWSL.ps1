@@ -92,7 +92,7 @@ function Send-ToastNotification {
     }
 
     try {
-        powershell {
+        powershell -Command {
 
         # Toast notification template
         $template = @"
@@ -161,14 +161,14 @@ function Send-ErrorNotification {
         return
     }
     
-    $subject = "Backup Warning - $computerName - $(Get-Date -Format 'yyyy-MM-dd')"
+    $subject = "Backup Error - $computerName - $(Get-Date -Format 'yyyy-MM-dd')"
     $body = @"
-Backup completed with warnings/errors on $computerName
+Backup completed with errors on $computerName
 
 Backup Location: $BackupPath
 Date: $(Get-Date)
 
-Errors/Warnings:
+Errors:
 $($ErrorMessages | ForEach-Object { "- $_" } | Out-String)
 
 Please check the backup logs for more details.
