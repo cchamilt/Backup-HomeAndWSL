@@ -19,6 +19,7 @@ PowerShell scripts for backing up Windows home directories, individual files, an
 
 ## Prerequisites
 
+- Windows 10/11
 - PowerShell 5.1 or later
 - [7-Zip](https://www.7-zip.org/) installed
 - [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) (optional, for WSL backups)
