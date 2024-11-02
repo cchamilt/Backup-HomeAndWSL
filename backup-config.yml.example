@@ -1,0 +1,88 @@
+# Paths to store backup and email passwords
+BackupPasswordPath: "%USERPROFILE%\\.backup\\backup_key.txt"
+
+# Backup paths
+BackupRoot: "%USERPROFILE%\\OneDrive\\PCBackup"
+#    "%USERPROFILE%\\OneDrive - Personal\\PCBackup"
+#    "%USERPROFILE%\\OneDrive - Business\\PCBackup"
+TempBackupDir: "%TEMP%"
+
+# Backup settings
+RetentionCount: 4
+MaxFileSizeMB: 256
+
+# Compression settings
+CompressionLevel: 5  # 0=none to 9=ultra
+CompressionType: "7z"  # 7z offers better compression than zip
+
+# Directories to backup
+HomeItems:
+  - "%USERPROFILE%\\.cursor"
+  - "%USERPROFILE%\\.cursor-tutor"
+  - "%USERPROFILE%\\.gk"
+  - "%USERPROFILE%\\.redhat"
+  - "%USERPROFILE%\\.ssh"
+  - "%USERPROFILE%\\.vscode"
+  - "%USERPROFILE%\\go"
+  - "%USERPROFILE%\\Oracle"
+  - "%USERPROFILE%\\Saved Games"
+  - "%USERPROFILE%\\.gitconfig"
+  - "%USERPROFILE%\\.npmrc"
+  - "%USERPROFILE%\\.yarnrc"
+  - "%USERPROFILE%\\.yarnrc.yml"
+#  - "%APPDATA%"
+#  - "%LOCALAPPDATA%"
+#Windows Backup should already backup these directories
+# - "%USERPROFILE%\\Documents"
+# - "%USERPROFILE%\\Pictures"
+# - "%USERPROFILE%\\Desktop"
+
+# File exclusion patterns
+ExcludeFilePatterns:
+  - "*.tmp"
+  - "*.temp"
+  - "ntuser.dat*"
+  - "*.log"
+  - "*cache*"
+  - "*Cookies*"
+  - "*.LOG*"
+
+# Directory exclusion patterns
+ExcludeDirectoryPatterns:
+#  - "AppData"
+#  - "Local Settings"
+  - "Temporary Internet Files"
+  - "INetCache"
+  - "node_modules"
+  - "dist"
+  - "build"
+  - "OneDrive*"
+  - "*Cache*"
+  - "*cache*"
+  - "Sessions"
+  - "*Temp*"
+  - "*temp*"
+  - "obj"
+  - "bin"
+  - ".vs"
+  
+#ExcludeWslDistros:
+#  - "ubuntu-old"
+
+# Notification settings
+Notifications:
+  Email:
+    Enable: false
+    From: "your-email@domain.com"
+    To: "your-email@domain.com"
+    SmtpServer: "smtp.office365.com"
+    SmtpPort: 587
+    SmtpUsername: "your-email@domain.com"
+    SmtpPasswordPath: "%USERPROFILE%\\.backup\\smtp_cred.txt"
+    
+  Toast:
+    Enable: true
+
+# Paths to required tools
+Tools:
+  SevenZip: "C:\\Program Files\\7-Zip\\7z.exe"
