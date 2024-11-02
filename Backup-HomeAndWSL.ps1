@@ -92,10 +92,14 @@ function Send-ToastNotification {
     }
 
     try {
-        powershell -Command {
+        # Create the toast notification script block
+        $toastScript = @"
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Runtime.WindowsRuntime
+[Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+[Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
 
-        # Toast notification template
-        $template = @"
+`$template = @'
 <toast>
     <visual>
         <binding template="ToastGeneric">
@@ -104,28 +108,32 @@ function Send-ToastNotification {
         </binding>
     </visual>
 </toast>
+'@
+
+`$appId = 'Backup Script'
+`$regPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings'
+`$appRegPath = "`$regPath\`$appId"
+
+if (-not (Test-Path `$appRegPath)) {
+    New-Item -Path `$appRegPath -Force | Out-Null
+    New-ItemProperty -Path `$appRegPath -Name 'ShowInActionCenter' -Value 1 -PropertyType DWORD -Force | Out-Null
+}
+
+`$xml = New-Object Windows.Data.Xml.Dom.XmlDocument
+`$xml.LoadXml(`$template)
+`$toast = New-Object Windows.UI.Notifications.ToastNotification(`$xml)
+[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier(`$appId).Show(`$toast)
 "@
-            # Load Windows Runtime assemblies
-            $null = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]
-            $null = [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime]
-            
-            # Register AppId in the registry for notifications
-            $appId = "Backup Script"
-            $regPath = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings"
-            $appRegPath = "$regPath\$appId"
-            
-            if (-not (Test-Path $appRegPath)) {
-                New-Item -Path $appRegPath -Force | Out-Null
-                New-ItemProperty -Path $appRegPath -Name "ShowInActionCenter" -Value 1 -PropertyType DWORD -Force | Out-Null
-            }
-        
-            # Create and show notification
-            $xml = New-Object Windows.Data.Xml.Dom.XmlDocument
-            $xml.LoadXml($template)
-            $toast = New-Object Windows.UI.Notifications.ToastNotification($xml)
-            [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($appId).Show($toast)
+
+        # Execute the toast notification in PowerShell 5.1
+        $encodedCommand = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($toastScript))
+        $process = Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile", "-EncodedCommand", $encodedCommand -Wait -PassThru
+
+        if ($process.ExitCode -eq 0) {
+            Write-Log "Toast notification sent successfully" -Level Info
+        } else {
+            throw "PowerShell 5.1 process exited with code: $($process.ExitCode)"
         }
-        Write-Log "Sent toast notification" -Level Info
     }
     catch {
         Write-Log "Failed to send toast notification: $_" -Level Error
