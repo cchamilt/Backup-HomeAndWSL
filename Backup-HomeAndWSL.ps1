@@ -495,12 +495,11 @@ $env:WSL_UTF8 = 1
 # Backup WSL distributions
 $wslDistros = wsl --list --quiet | 
     ForEach-Object {
-        $_.Trim()
+        $_.Trim() -replace '[^\w\-]', '_'  # Replace any non-word chars (except hyphen) with underscore
     } | Where-Object { 
         $_ -ne "" -and 
         $_ -notmatch "^Windows" -and 
-        $_ -notmatch "^This"
-    } | Where-Object {
+        $_ -notmatch "^This" -and
         $_ -notin $configBackup.ExcludeWslDistros
     }
 
