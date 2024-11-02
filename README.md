@@ -30,10 +30,10 @@ PowerShell scripts for backing up Windows home directories, individual files, an
 1. Clone this repository:
 
 ``` powershell
-git clone https://github.com/cchamilton/backup-home-and-wsl.git
+git clone https://github.com/cchamilt/Backup-HomeAndWSL.git
 
 #Optional: move to a directory you want to keep the files in
-Move-Item .\backup-home-and-wsl -Destination "%USERPROFILE%\OneDrive\PCBackup\scripts"
+Move-Item .\Backup-HomeAndWSL -Destination "%USERPROFILE%\OneDrive\PCBackup\scripts"
 ```
 
 2. Import the PowerShell-Yaml module:
